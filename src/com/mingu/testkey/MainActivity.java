@@ -38,21 +38,24 @@ public class MainActivity extends Activity {
 			}
 			Log.v("carlos", keyinfoStr);
 			keyinfo.setText(keyinfoStr);
-//		handler.postDelayed(runnable, 50);
+			handler.postDelayed(runnable, 50);
    		}
 	};
 	
 	@Override
 	protected void onPause() {
-		myTimer.cancel();
+//		myTimer.cancel();
+		handler.removeCallbacks(runnable);
 		super.onPause();
 	};
 	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		myTimer = new Timer();
-		myTimer.schedule(new MyTimerTask(), 0,100);
+//		myTimer = new Timer();
+//		myTimer.schedule(new MyTimerTask(), 0,100);
+		handler.postDelayed(runnable, 50);
+
 		super.onResume();
 	}
 	
