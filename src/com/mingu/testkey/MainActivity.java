@@ -2,24 +2,25 @@ package com.mingu.testkey;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
+	@SuppressLint("UseSparseArrays")
 	Map<Integer,Integer> map = new HashMap<Integer,Integer>();
 	TextView keyinfo;
 	Handler handler;
+	Timer myTimer;
 	
 	private Runnable runnable = new Runnable() {
 		@Override
@@ -37,9 +38,23 @@ public class MainActivity extends Activity {
 			}
 			Log.v("carlos", keyinfoStr);
 			keyinfo.setText(keyinfoStr);
-		handler.postDelayed(runnable, 50);
+//		handler.postDelayed(runnable, 50);
    		}
 	};
+	
+	@Override
+	protected void onPause() {
+		myTimer.cancel();
+		super.onPause();
+	};
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		myTimer = new Timer();
+		myTimer.schedule(new MyTimerTask(), 0,100);
+		super.onResume();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +62,20 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		keyinfo = (TextView)findViewById(R.id.keyshow);
 		keyinfo.setText("hey carlos");
-		handler = new android.os.Handler();
-		handler.postDelayed(runnable, 50);
+		handler = new Handler();
+//		handler.postDelayed(runnable, 50);
 		
-//	Timer myTimer;
-//	
+	
+	
 //	myTimer = new Timer();
-//	myTimer.schedule(new TimerTask() {
-//		
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
+//	myTimer.schedule(new MyTimerTask(), 0,1000);
+	}
+	    
+	class MyTimerTask extends TimerTask {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
 //			try {
 //				Thread.sleep(1000);
 //			} catch (Exception e) {
@@ -72,13 +90,12 @@ public class MainActivity extends Activity {
 //				if(entry.getValue() == 1)
 //					keyinfoStr += "key"+entry.getKey()+" ";
 //			}
+			handler.postDelayed(runnable, 50);
+
 //			Log.v("carlos", keyinfoStr);
-////			keyinfo.setText(keyinfoStr);
-//		}
-//		}, 0,1000);
-	}
-	    
-	
+//			keyinfo.setText(keyinfoStr);
+			}
+		}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
